@@ -2,12 +2,22 @@ require(lme4)
 require(stringr) #required to extract stimuli # for both prime and target stimuli strings
 require(Deducer) #required for recode function somehow
 require(reshape) #required for some convoluted workaround to convert from LONG to WIDE format
+
+
+# READ DATA FROM GITHUB ---------------------------------------------------
+library(RCurl)
+
+# Copy RAW url from GitHub repository
+s1.WIT <- read.csv(textConnection(getURL("https://raw.githubusercontent.com/eplebel/intra-individual-MS/master/data/wit_agg_detailed_s1.csv")))            
+s2.WIT <- read.csv(textConnection(getURL("https://raw.githubusercontent.com/eplebel/intra-individual-MS/master/data/wit_agg_detailed_s2.csv")))
+
+
 #Mixed-effects models for my Weapon Identification Task (WIT) data w/ goal of identifying clusters of 
 # (1) Ps showing anti-Black bias vs. (2) not showing vs. (3) showing pro-White bias
 #####################################################################################################################################
 #Read in replication Sample #1 data
 #####################################################################################################################################
-s1.WIT = read.csv("https://raw.githubusercontent.com/eplebel/intra-individual-MS/master/data/wit_agg_detailed_s1.csv")
+#s1.WIT = read.csv("https://raw.githubusercontent.com/eplebel/intra-individual-MS/master/data/wit_agg_detailed_s1.csv")
 primeStimNum = substring(s1.WIT$Stim.2,3,3) #create new variables needed for later
 targetStimNum = substring(s1.WIT$Stim.3, str_length(s1.WIT$Stim.3)-4, str_length(s1.WIT$Stim.3)-4)
 RT.log = log(s1.WIT$RT)
@@ -21,7 +31,7 @@ s1.WIT.tools.correct.USE = subset(s1.WIT,((Trial>29 & Trial<80)|(Trial>129 & Tri
 #####################################################################################################################################
 #Read in replication Sample #2 data
 #####################################################################################################################################
-s2.WIT = read.csv("https://raw.githubusercontent.com/eplebel/intra-individual-MS/master/data/wit_agg_detailed_s2.csv")
+#s2.WIT = read.csv("https://raw.githubusercontent.com/eplebel/intra-individual-MS/master/data/wit_agg_detailed_s2.csv")
 primeStimNum = substring(s2.WIT$Stim.2,3,3) #create new variables needed for later
 targetStimNum = substring(s2.WIT$Stim.3, str_length(s2.WIT$Stim.3)-4, str_length(s2.WIT$Stim.3)-4)
 RT.log = log(s2.WIT$RT)
