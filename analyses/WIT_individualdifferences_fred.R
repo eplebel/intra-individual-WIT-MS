@@ -56,6 +56,14 @@ xtabs(~PrimeTarget+Prime,s1.TOT,drop=T,sparse=T)
 # This will be the random effect for different stimulus combinations
 s1.TOT$Stims <- with(s1.TOT, interaction(Prime,PrimeTarget,drop=TRUE))
 
+# PLOT SLOPES -------------------------------------------------------------
+xyplot(scale(RT.log.c,scale=F) ~ TrialTime | Subj, data=s1.TOT[which(s1.TOT$Subj%in%c(107,100,sample(unique(s1.TOT$Subj),14))), ], layout=c(4,4), groups=Prime, xlab = "Time (a.u.)", ylab = "Grand mean centered log(RT) of correct trials", main="WIT: 16 Random Participants\nRandom Slope Model?", 
+       prepanel = function(x, y, groups) prepanel.lmline(x, y),
+       panel=function(x,y,groups,subscripts){
+         panel.xyplot(x,y,groups=groups,subscripts = subscripts)
+         #panel.superpose(x,y,panel.groups=panel.loess, groups=groups, subscripts = subscripts, lwd=2,alpha=.6)
+         panel.superpose(x,y,panel.groups=panel.lmline, groups=groups, subscripts = subscripts, lwd=3)},
+       ylim=c(-1.5,1.5),as.table=T,auto.key = list(points = FALSE, lines = TRUE, columns = 2))
 
 # FULL MODEL --------------------------------------------------------------
 
@@ -83,40 +91,50 @@ s1.M11m <- lmer(RT.log.c ~ TrialTime * tool * race + (TrialTime|Subj) + (tool+ra
 #,control=lmerControl(optimizer="Nelder_Mead"))
 (s1.M11m.sum <- summary(s1.M11m))
 
+interaction.plot(TrialTime, Subj, s1.M11m, xlab="Time", ylab="log(RT)")
 
-# s1.M20 <- lmer(RT.log.c ~ TrialTime + Prime + Condition + (TrialTime|Subj) + (Prime|Subj) + (1|Stims), data=s1.TOT[rndID, ], REML=F) 
-# s1.M21 <- lmer(RT.log.c ~ TrialTime + Prime * Condition + (TrialTime|Subj) + (Prime|Subj) + (1|Stims), data=s1.TOT[rndID, ], REML=F) 
-# anova(s1.M11,s1.M20,s1.M21)
-# 
-# pr.M1 <- profile(s1.M1, which="beta_")
-# 
-# xyplot(pr.M1, absVal=TRUE)
-# 
-# fitted <- s1.M1@frame
-# 
-# dotplot(ranef(s1.M1, condVar = TRUE))
-# 
-# print(confint(pr.M1))
-# xyplot(pr.M1)
-# densityplot(pr.M1)
-# splom(pr.M1)
-# 
-# min(
-# fitted <- s1.M1@frame
-# 
-# dotplot(ranef(s1.M1, condVar = TRUE))
-# 
-# print(confint(pr.M1))
-# xyplot(pr.M1)
-# densityplot(pr.M1)
-# splom(pr.M1)
-# 
-# s1.M2 = lmer(RT.log ~ TrialNum + race + WIT.cond.f + (race|Subj) + (race|PrimeTarget), data=s1.WIT.tools.correct[rndID, ], REML=FALSE) 
-# summary(s1.M2)
-# 
-# pr.M2 <- profile(s1.M2, optimizer="Nelder_Mead", which="beta_")
-# xyplot(pr.M2)
-# densityplot(pr.M2)
-# splom(pr.M2)
-# print(confint(pr.M2))
+s1.M20 <- lmer(RT.log.c ~ TrialTime + Prime + Condition + (TrialTime|Subj) + (Prime|Subj) + (1|Stims), data=s1.TOT[rndID, ], REML=F) 
+s1.M21 <- lmer(RT.log.c ~ TrialTime + Prime * Condition + (TrialTime|Subj) + (Prime|Subj) + (1|Stims), data=s1.TOT[rndID, ], REML=F) 
+anova(s1.M11,s1.M20,s1.M21)
+
+str(rr1 <- ranef(s1.M11m))
+dotplot(rr1,scales = list(x = list(relation = 'free')))[["Subj"]]
+
+
+which(rr1$Subj==min(rr1$Subj[[1]]))
+
+if(FALSE) )  ## default
+
+plot(resid(s1.M11m, scaled=T))
+pr.M1 <- profile(s1.M1, which="beta_")
+
+xyplot(pr.M1, absVal=TRUE)
+
+fitted <- s1.M1@frame
+
+dotplot(ranef(s1.M1, condVar = TRUE))
+
+print(confint(pr.M1))
+xyplot(pr.M1)
+densityplot(pr.M1)
+splom(pr.M1)
+
+min(
+fitted <- s1.M1@frame
+
+dotplot(ranef(s1.M1, condVar = TRUE))
+
+print(confint(pr.M1))
+xyplot(pr.M1)
+densityplot(pr.M1)
+splom(pr.M1)
+
+s1.M2 = lmer(RT.log ~ TrialNum + race + WIT.cond.f + (race|Subj) + (race|PrimeTarget), data=s1.WIT.tools.correct[rndID, ], REML=FALSE) 
+summary(s1.M2)
+
+pr.M2 <- profile(s1.M2, optimizer="Nelder_Mead", which="beta_")
+xyplot(pr.M2)
+densityplot(pr.M2)
+splom(pr.M2)
+print(confint(pr.M2))
 
