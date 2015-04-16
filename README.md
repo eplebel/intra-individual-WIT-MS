@@ -1,4 +1,4 @@
-intra-individual-MS
-===================
+intra-individual-WIT-MS
+=======================
 
-Article proposing an intra-individual approach to experimental psychology as a more productive way to test theory and build a cumulative knowledge base. Approach will be demonstrated via empirical demonstrations and examples applied to research questions in different areas of psychology.
+Intra-individual analysis of racial bias on the Weapon Identification Task (WIT; Payne et al., 2002) across two independent samples (N=150 and N=148). Will demonstrate different kinds of benefits of the intra-individual approach -- over the standard between-person approach. Will review current theoretical models of racial bias and elaborate on the implications our results have for such theoretical models. Meta-theoretical issues related to theory testing in social psychology will also be discussed. 
